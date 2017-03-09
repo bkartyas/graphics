@@ -38,8 +38,8 @@ Mat4Array.prototype.subarray = function(begin, end){
  * @method commit
  * @memberof Mat4Array.prototype  
  * @description Sets the value of the matrix array to a WebGL mat4 array uniform variable.
- * @param gl {WebGLRenderingContext}
- * @param uniformLocation {WebGLUniformLocation}
+ * @param {WebGLRenderingContext} gl - rendering context
+ * @param {WebGLUniformLocation} uniformLocation - location of the uniform variable in the currently used WebGL program
  */
 Mat4Array.prototype.commit = function(gl, uniformLocation){
   gl.uniformMatrix4fv(uniformLocation, false, this.storage);

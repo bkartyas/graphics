@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="Mat4.html">Mat4</a></li><li><a href="Mat4Array.html">Mat4Array</a></li><li><a href="Vec1.html">Vec1</a></li><li><a href="Vec1Array.html">Vec1Array</a></li><li><a href="Vec2.html">Vec2</a></li><li><a href="Vec2Array.html">Vec2Array</a></li><li><a href="Vec3.html">Vec3</a></li><li><a href="Vec3Array.html">Vec3Array</a></li><li><a href="Vec4.html">Vec4</a></li><li><a href="Vec4Array.html">Vec4Array</a></li><li><a href="VecArray.html">VecArray</a></li>
+					<li><a href="Mat4.html">Mat4</a></li><li><a href="Mat4Array.html">Mat4Array</a></li><li><a href="Sampler2D.html">Sampler2D</a></li><li><a href="Sampler2DArray.html">Sampler2DArray</a></li><li><a href="SamplerCube.html">SamplerCube</a></li><li><a href="SamplerCubeArray.html">SamplerCubeArray</a></li><li><a href="UniformReflectionFactories.html">UniformReflectionFactories</a></li><li><a href="Vec1.html">Vec1</a></li><li><a href="Vec1Array.html">Vec1Array</a></li><li><a href="Vec2.html">Vec2</a></li><li><a href="Vec2Array.html">Vec2Array</a></li><li><a href="Vec3.html">Vec3</a></li><li><a href="Vec3Array.html">Vec3Array</a></li><li><a href="Vec4.html">Vec4</a></li><li><a href="Vec4Array.html">Vec4Array</a></li><li><a href="VecArray.html">VecArray</a></li>
 				</ul>
 			</li>
 			
@@ -104,7 +104,7 @@
 <pre class="prettyprint source lang-javascript"><code>var v = new Vec4(1, 2, 3, 1);
 var m = new Mat4().rotate(Math.PI/2, {z:1});
 v.mul(m); // v &lt;= (-2, 1, 3, 1);
-console.table(v);</code></pre><p>Only 4x4 matrices, i.e. <a href="Mat4.html">Mat4</a>s, are supported. When transforming <a href="Vec2.html">Vec2</a>s and <a href="Vec3.html">Vec3</a>s, there are two options. When using methods <a href="Vec2#xy01mul">Vec2.prototype.xy01mul</a> or <a href="Vec3.html#xyz1mul">Vec3.prototype.xyz1mul</a>, the vector is augmented to a homogeneous four-element position by appending zeros. The extra coordinates from the result are discarded.</p>
+console.table(v);</code></pre><p>Only 4x4 matrices, i.e. <a href="Mat4.html">Mat4</a>s, are supported. When transforming <a href="Vec2.html">Vec2</a>s and <a href="Vec3.html">Vec3</a>s, there are two options. When using methods <a href="Vec2#xy01mul">Vec2.prototype.xy01mul</a> or <a href="Vec3.html#xyz1mul">Vec3.prototype.xyz1mul</a>, the vector is augmented to a homogeneous four-element position by appending a zero and a one, or a one, respectively. The extra coordinates from the result are discarded.</p>
 <pre class="prettyprint source lang-javascript"><code>var v = new Vec2(1, 2);
 var m = new Mat4().translate(3, 4);
 v.xy01mul(m); // v &lt;= (4, 6), the translated vector
@@ -246,6 +246,481 @@ console.table(errorVector);</code></pre></article>
     
         
             <div class="description">WebGLMath <a href="Mat4.html">Mat4</a> class</div>
+        
+
+        
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+	<dt class="tag-copyright method-doc-label method-doc-details-label">Copyright:</dt>
+	<dd class="tag-copyright">
+		<ul class="dummy">
+			<li>Laszlo Szecsi 2017</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+	<h1 class="page-title">Index</h1>
+<section>
+
+<header>
+    
+        <h2>
+        Sampler2D.js
+        </h2>
+        
+    
+</header>
+
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">WebGLMath <a href="Sampler2D.html">Sampler2D</a> class</div>
+        
+
+        
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+	<dt class="tag-copyright method-doc-label method-doc-details-label">Copyright:</dt>
+	<dd class="tag-copyright">
+		<ul class="dummy">
+			<li>Laszlo Szecsi 2017</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+	<h1 class="page-title">Index</h1>
+<section>
+
+<header>
+    
+        <h2>
+        Sampler2DArray.js
+        </h2>
+        
+    
+</header>
+
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">WebGLMath Sampler2DArray class</div>
+        
+
+        
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+	<dt class="tag-copyright method-doc-label method-doc-details-label">Copyright:</dt>
+	<dd class="tag-copyright">
+		<ul class="dummy">
+			<li>Laszlo Szecsi 2017</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+	<h1 class="page-title">Index</h1>
+<section>
+
+<header>
+    
+        <h2>
+        SamplerCube.js
+        </h2>
+        
+    
+</header>
+
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">WebGLMath <a href="SamplerCube.html">SamplerCube</a> class</div>
+        
+
+        
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+	<dt class="tag-copyright method-doc-label method-doc-details-label">Copyright:</dt>
+	<dd class="tag-copyright">
+		<ul class="dummy">
+			<li>Laszlo Szecsi 2017</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+	<h1 class="page-title">Index</h1>
+<section>
+
+<header>
+    
+        <h2>
+        SamplerCubeArray.js
+        </h2>
+        
+    
+</header>
+
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">WebGLMath SamplerCubeArray class</div>
+        
+
+        
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+	<dt class="tag-copyright method-doc-label method-doc-details-label">Copyright:</dt>
+	<dd class="tag-copyright">
+		<ul class="dummy">
+			<li>Laszlo Szecsi 2017</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+	<h1 class="page-title">Index</h1>
+<section>
+
+<header>
+    
+        <h2>
+        UniformReflectionFactories.js
+        </h2>
+        
+    
+</header>
+
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">WebGLMath UniformReflectionFactories object</div>
         
 
         
@@ -1215,7 +1690,7 @@ console.table(errorVector);</code></pre></article>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 2017-02-15T23:06:29+01:00
+		on 2017-03-08T22:35:46+01:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

@@ -16,11 +16,12 @@
  * <tr><td>-</td><td>[minus]{@link Vec3#minus}</td></tr>
  * <tr><td>*</td><td>[times]{@link Vec3#times}</td></tr>
  * <tr><td>/</td><td>[over]{@link Vec3#over}</td></tr>
- * <tr><td>&times;</td><td>[mul]{@link Vec3#cross}</td></tr>
+ * <tr><td>&middot;</td><td>[dot]{@link Vec3#dot}</td></tr>
+ * <tr><td>&times;</td><td>[cross]{@link Vec3#cross}</td></tr>
  * </table>
  * <BR> <code>a = b + c</code> can be computed as <code>var a = b.plus(c)</code>, when <code>a</code> does not yet exist, and performance does not matter. It is not required that <code>c</code> is a {@link Vec3}: it can be a vector of different length, an object literal, or its coordinates given as separate arguments.
  * <BR> <code>a.set(b).add(c)</code> is about three times faster. Variable <code>a</code> needs to exist, and be a {@link Vec3}. Neither b nor c are required to be {@link Vec3}s: they can be vectors of different length, object literals, or its coordinates given as separate arguments.
- * <BR> If <code>a</code>, <code>b</code> and <code>c</code> are {@link Vec3} instances, <code>a.$add(b, c)</code> can be used for optimum performance. It is seven times faster than <code>a.set(b).add(c)</code>, or twenty times faster than <code>a = b.plus(c)</code>.
+ * <BR> If <code>a</code>, <code>b</code> and <code>c</code> are {@link Vec3} instances, <code>a.setSum(b, c)</code> can be used for optimum performance. It is seven times faster than <code>a.set(b).add(c)</code>, or twenty times faster than <code>a = b.plus(c)</code>.
  * <BR> It is recommended to use optimized methods for time-critical per-frame tasks, while programmer-friendly interfaces are useful for one-time initializations, e.g. when constructing a scene.
  * @description  Without parameters, initializes the vector to (0, 0, 0).
  * @param {Vec3 | Vec2 | Object | Number} [u=0] - Any object (properties x, y, z are interpreted as coordinates, if given), or a numerical value for coordinate x.
@@ -112,34 +113,34 @@ Vec3.random = function(minVal, maxVal) {
   var result = Object.create(Vec3.prototype);
   result.storage = new Float32Array(3);
   var mina = minVal && minVal.x || Number(minVal).valueOf() || 0;
-  var maxa = maxVal && maxVal.x || Number(maxVal).valueOf() || 1;  
+  var maxa = maxVal && ((maxVal.x-1) || (Number(maxVal).valueOf()-1) || 0) + 1;
   result.storage[0] = Math.random() * (maxa - mina) + mina;
   mina = minVal && minVal.y || Number(minVal).valueOf() || 0;
-  maxa = maxVal && maxVal.y || Number(maxVal).valueOf() || 1;  
+  maxa = maxVal && ((maxVal.y-1) || (Number(maxVal).valueOf()-1) || 0) + 1;
   result.storage[1] = Math.random() * (maxa - mina) + mina;
   mina = minVal && minVal.z || Number(minVal).valueOf() || 0;
-  maxa = maxVal && maxVal.z || Number(maxVal).valueOf() || 1;  
+  maxa = maxVal && ((maxVal.z-1) || (Number(maxVal).valueOf()-1) || 0) + 1;  
   result.storage[2] = Math.random() * (maxa - mina) + mina;
   return result;
 };
 
 /**
- * @method $random
+ * @method setRandom
  * @memberof Vec3.prototype  
  * @description Fill the vector with random values that to lie between two further values, elementwise.
  * @param {Vec3 | Vec2 | Object | Number} [minVal=0] - Specifies the lower end of the random range. If a scalar is given, it applies to all channels.
  * @param {Vec3 | Vec2 | Object | Number} [maxVal=1] - Specifies the upper end of the random range. If a scalar is given, it applies to all channels.
  * @return {Vec3} this
  */
-Vec3.prototype.$random = function(minVal, maxVal) {
+Vec3.prototype.setRandom = function(minVal, maxVal) {
   var mina = minVal && minVal.x || Number(minVal).valueOf() || 0;
-  var maxa = maxVal && maxVal.x || Number(maxVal).valueOf() || 1;  
+  var maxa = maxVal && ((maxVal.x-1) || (Number(maxVal).valueOf()-1) || 0) + 1;  
   this.storage[0] = Math.random() * (maxa - mina) + mina;
   mina = minVal && minVal.y || Number(minVal).valueOf() || 0;
-  maxa = maxVal && maxVal.y || Number(maxVal).valueOf() || 1;  
+  maxa = maxVal && ((maxVal.y-1) || (Number(maxVal).valueOf()-1) || 0) + 1;  
   this.storage[1] = Math.random() * (maxa - mina) + mina;
   mina = minVal && minVal.z || Number(minVal).valueOf() || 0;
-  maxa = maxVal && maxVal.z || Number(maxVal).valueOf() || 1;  
+  maxa = maxVal && ((maxVal.z-1) || (Number(maxVal).valueOf()-1) || 0) + 1;  
   this.storage[2] = Math.random() * (maxa - mina) + mina;
   return this;  
 };
@@ -165,15 +166,15 @@ Vec3.prototype.clamp = function(minVal, maxVal) {
   if(this.storage[2] < mina){
     this.storage[2] = mina;
   }  
-  var maxa = maxVal && maxVal.x || Number(maxVal).valueOf() || 1;
+  var maxa = maxVal && ((maxVal.x-1) || (Number(maxVal).valueOf()-1) || 0) + 1;
   if(this.storage[0] > maxa){
     this.storage[0] = maxa;
   }
-  maxa = maxVal && maxVal.y || Number(maxVal).valueOf() || 1;
+  maxa = maxVal && ((maxVal.y-1) || (Number(maxVal).valueOf()-1) || 0) + 1;
   if(this.storage[1] > maxa){
     this.storage[1] = maxa;
   }
-  maxa = maxVal && maxVal.z || Number(maxVal).valueOf() || 1;
+  maxa = maxVal && ((maxVal.z-1) || (Number(maxVal).valueOf()-1) || 0) + 1;
   if(this.storage[2] > maxa){
     this.storage[2] = maxa;
   }
@@ -181,7 +182,7 @@ Vec3.prototype.clamp = function(minVal, maxVal) {
 };
 
 /**
- * @method $clamp
+ * @method setClamped
  * @memberof Vec3.prototype  
  * @description Fast. Constrains a value to lie between two further values, elementwise, storing the result in this vector.
  * @param {Vec3} b - The value to constrain.
@@ -189,9 +190,9 @@ Vec3.prototype.clamp = function(minVal, maxVal) {
  * @param {Vec3 | Vec2 | Object | Number} [maxVal=1] - Specifies the upper end of the range into which to constrain the elements. If a scalar is given, it applies to all channels.
  * @return {Vec3} this
  */
-Vec3.prototype.$clamp = function(b, minVal, maxVal) {
+Vec3.prototype.setClamped = function(b, minVal, maxVal) {
   var mina = minVal && minVal.x || Number(minVal).valueOf() || 0;
-  var maxa = maxVal && maxVal.x || Number(maxVal).valueOf() || 1;  
+  var maxa = maxVal && ((maxVal.x-1) || (Number(maxVal).valueOf()-1) || 0) + 1;  
   if(b.storage[0] < mina){
     this.storage[0] = mina;
   } else if(b.storage[0] > maxa){
@@ -200,7 +201,7 @@ Vec3.prototype.$clamp = function(b, minVal, maxVal) {
     this.storage[0] = b.storage[0];
   }
   mina = minVal && minVal.y || Number(minVal).valueOf() || 0;
-  maxa = maxVal && maxVal.y || Number(maxVal).valueOf() || 1;  
+  maxa = maxVal && ((maxVal.y-1) || (Number(maxVal).valueOf()-1) || 0) + 1;  
   if(b.storage[1] < mina){
     this.storage[1] = mina;
   } else if(b.storage[1] > maxa){
@@ -209,7 +210,7 @@ Vec3.prototype.$clamp = function(b, minVal, maxVal) {
     this.storage[1] = b.storage[1];
   }
   mina = minVal && minVal.z || Number(minVal).valueOf() || 0;
-  maxa = maxVal && maxVal.z || Number(maxVal).valueOf() || 1;  
+  maxa = maxVal && ((maxVal.z-1) || (Number(maxVal).valueOf()-1) || 0) + 1;  
   if(b.storage[2] < mina){
     this.storage[2] = mina;
   } else if(b.storage[2] > maxa){
@@ -273,14 +274,14 @@ Vec3.prototype.plus = function(u, v, s) {
 };
 
 /**
- * @method $add
+ * @method setSum
  * @memberof Vec3.prototype  
  * @description Fast. Adds the two argument vectors, storing the result in this vector.
  * @param {Vec3} b - Term 1.
  * @param {Vec3} c - Term 2. 
  * @return {Vec3} this
  */
-Vec3.prototype.$add = function(b, c) {
+Vec3.prototype.setSum = function(b, c) {
   this.storage[0] = b.storage[0] + c.storage[0];
   this.storage[1] = b.storage[1] + c.storage[1];
   this.storage[2] = b.storage[2] + c.storage[2];
@@ -322,14 +323,14 @@ Vec3.prototype.minus = function(u, v, s) {
 };
 
 /**
- * @method $sub
+ * @method setDifference
  * @memberof Vec3.prototype  
  * @description Fast. Substracts the second argument vector from the first one, storing the result in this vector.
  * @param {Vec3} b - Minuend.
  * @param {Vec3} c - Subtrahend. 
  * @return {Vec3} this
  */
-Vec3.prototype.$sub = function(b, c) {
+Vec3.prototype.setDifference = function(b, c) {
   this.storage[0] = b.storage[0] - c.storage[0];
   this.storage[1] = b.storage[1] - c.storage[1];
   this.storage[2] = b.storage[2] - c.storage[2];
@@ -380,7 +381,7 @@ Vec3.prototype.times = function(u, v, s) {
 Vec3.prototype.xyz1times = function(m) {
   var result = Object.create(Vec3.prototype);
   result.storage = new Float32Array(3);
-  result.$xyz1mul(this, m);
+  result.setxyz1Transformed(this, m);
   return result;
 };
 
@@ -394,19 +395,19 @@ Vec3.prototype.xyz1times = function(m) {
 Vec3.prototype.xyz0times = function(m) {
   var result = Object.create(Vec3.prototype);
   result.storage = new Float32Array(3);
-  result.$xyz0mul(this, m);
+  result.setxyz0Transformed(this, m);
   return result;
 };
 
 /**
- * @method $mul
+ * @method setProduct
  * @memberof Vec3.prototype  
  * @description Fast. Multiplies, elementwise, the two argument vectors, storing the result in this vector.
  * @param {Vec3} b - Factor 1.
  * @param {Vec3} c - Factor 2. 
  * @return {Vec3} this
  */
-Vec3.prototype.$mul = function(b, c) {
+Vec3.prototype.setProduct = function(b, c) {
   this.storage[0] = b.storage[0] * c.storage[0];
   this.storage[1] = b.storage[1] * c.storage[1];
   this.storage[2] = b.storage[2] * c.storage[2];
@@ -448,14 +449,14 @@ Vec3.prototype.over = function(u, v, s) {
 };
 
 /**
- * @method $div
+ * @method setQuotient
  * @memberof Vec3.prototype  
  * @description Fast. Divides, elementwise, the two argument vectors, storing the result in this vector.
  * @param {Vec3} b - Dividend.
  * @param {Vec3} c - Divisor. 
  * @return {Vec3} this
  */
-Vec3.prototype.$div = function(b, c) {
+Vec3.prototype.setQuotient = function(b, c) {
   this.storage[0] = b.storage[0] / c.storage[0];
   this.storage[1] = b.storage[1] / c.storage[1];
   this.storage[2] = b.storage[2] / c.storage[2];
@@ -463,34 +464,34 @@ Vec3.prototype.$div = function(b, c) {
 };
 
 /**
- * @method $scale
+ * @method setScaled
  * @memberof Vec3.prototype  
  * @description Fast. Scales the vector by a scalar.
  * @param {Vec3} a - Vector to scale.
  * @param {Number} s - Scale factor. 
  * @return {Vec3} this
  */
-Vec3.prototype.$scale = function(a, s){
+Vec3.prototype.setScaled = function(a, s){
   this.storage[0] = a.x * s;
   this.storage[1] = a.y * s;
   this.storage[2] = a.z * s;
   return this;  
-}
+};
 
 /**
- * @method $scaleByInverse
+ * @method setScaledByInverse
  * @memberof Vec3.prototype  
  * @description Fast. Scales the vector by the reciprocal of scalar.
  * @param {Vec3} a - Vector to scale.
  * @param {Number} s - Scale factor inverse.
  * @return {Vec3} this
  */
-Vec3.prototype.$scaleByInverse = function(a, s){
+Vec3.prototype.setScaledByInverse = function(a, s){
   this.storage[0] = a.x / s;
   this.storage[1] = a.y / s;
   this.storage[2] = a.z / s;  
   return this;  
-}
+};
 
 /**
  * @method length2
@@ -543,12 +544,12 @@ Vec3.prototype.direction = function() {
 };
 
 /**
- * @method normalize
+ * @method setNormalized
  * @memberof Vec3.prototype  
  * @description Scales the argmument vector by the inverse of its length, storing the result in this vector.
  * @return {Vec3} this
  */
-Vec3.prototype.$normalize = function(b) {
+Vec3.prototype.setNormalized = function(b) {
   var l = b.length();
   this.storage[0] = b.storage[0] / l;
   this.storage[1] = b.storage[1] / l;
@@ -574,7 +575,7 @@ Vec3.prototype.dot = function(u, v, s) {
 /**
  * @method cross
  * @memberof Vec3.prototype  
- * @description Simulates operator <code>%times;</code>. Computes the cross product of the vectors, overwriting the contents with the result.
+ * @description Simulates operator %times;. Computes the cross product of the vectors, returning the result in a new instance.
  * @param {Vec3 | Vec2 | Object | Number} [u=0] - Any object (properties x, y, z are interpreted as coordinates, if given), or a numerical value for coordinate x.
  * @param {Number} [v=0] - Ignored if u.y is defined. Otherwise, the value for coordinate y.
  * @param {Number} [s=0] - Ignored if u.z is defined. Otherwise, the value for coordinate z.
@@ -593,17 +594,17 @@ Vec3.prototype.cross = function(u, v, s) {
 };
 
 /**
- * @method $cross
+ * @method setVectorProduct
  * @memberof Vec3.prototype  
- * @description Fast. Computes the cross product of the two argument vectors, storing the result in this vector.
+ * @description Fast. Computes the vector product (cross product) of the two argument vectors, storing the result in this vector.
  * @param {Vec3} b - Left operand.
  * @param {Vec3} c - Right operand.
  * @return {Vec3} this
  */
-Vec3.prototype.$cross = function(b, c) {
-  this.storage[0] = b.storage[1] * c.storage[2] - this.storage[2] * c.storage[1];
-  this.storage[1] = b.storage[2] * c.storage[0] - this.storage[0] * c.storage[2];
-  this.storage[2] = b.storage[0] * c.storage[1] - this.storage[1] * c.storage[0];
+Vec3.prototype.setVectorProduct = function(b, c) {
+  this.storage[0] = b.storage[1] * c.storage[2] - b.storage[2] * c.storage[1];
+  this.storage[1] = b.storage[2] * c.storage[0] - b.storage[0] * c.storage[2];
+  this.storage[2] = b.storage[0] * c.storage[1] - b.storage[1] * c.storage[0];
   return this;
 };
 
@@ -642,13 +643,13 @@ Vec3.prototype.xyz1mul = function(m) {
 };
 
 /**
- * @method $xyz1mul
+ * @method setxyz1Transformed
  * @memberof Vec3.prototype
  * @description Multiplies the argument vector (considering it a row vector, augmented by 1 to a homogeneous position vector) with the argument matrix, from the right. The contents of this are overwritten with the transformed vector with the result. See {@link Vec3#xyz1times} for a version creating a new vector instance.
  * @param m {Mat4} The 4x4 linear homogeneous transformation matrix using column-major representation.
  * @return {Vec3} this
  */
-Vec3.prototype.$xyz1mul = function(v, m) {
+Vec3.prototype.setxyz1Transformed = function(v, m) {
   var x = v.storage[0];
   var y = v.storage[1];
   var z = v.storage[2];
@@ -702,13 +703,13 @@ Vec3.prototype.xyz0mul = function(m) {
 };
 
 /**
- * @method $xyz0mul
+ * @method setxyz0Transformed
  * @memberof Vec3.prototype
  * @description Multiplies the argument vector (considering it a row vector, augmented by 0 to a homogeneous direction vector) with the argument matrix, from the right. The contents of this are overwritten with the transformed vector with the result. See {@link Vec3#xyz0times} for a version creating a new vector instance.
  * @param m {Mat4} The 4x4 linear homogeneous transformation matrix using column-major representation.
  * @return {Vec3} this
  */
- Vec3.prototype.$xyz0mul = function(v, m) {
+ Vec3.prototype.setxyz0Transformed = function(v, m) {
   var x = v.storage[0];
   var y = v.storage[1];
   var z = v.storage[2];
@@ -731,8 +732,8 @@ Vec3.prototype.xyz0mul = function(m) {
  * @method commit
  * @memberof Vec3.prototype  
  * @description Sets the value of the vector to a WebGL vec3 uniform variable.
- * @param gl {WebGLRenderingContext}
- * @param uniformLocation {WebGLUniformLocation}
+ * @param {WebGLRenderingContext} gl - rendering context
+ * @param {WebGLUniformLocation} uniformLocation - location of the uniform variable in the currently used WebGL program
  */
 Vec3.prototype.commit = function(gl, uniformLocation){
   gl.uniform3fv(uniformLocation, this.storage);

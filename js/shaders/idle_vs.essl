@@ -1,11 +1,11 @@
 Shader.source[document.currentScript.src.split('js/shaders/')[1]] = `
 	attribute vec3 vertexPosition;
-	uniform vec2 offset;
+	uniform vec2 texOffset;
 	varying vec2 tex;
 	
 	void main(void) {
 		gl_Position = vec4(vertexPosition, 1.5);
-		tex.x = vertexPosition.x / 12.0 + offset.x;
-		tex.y = vertexPosition.y / -12.0 + offset.y;
+		tex.x = vertexPosition.x + texOffset.x;
+		tex.y = vertexPosition.y + texOffset.y;
 	}
 `;

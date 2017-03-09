@@ -53,7 +53,7 @@ Vec4Array.prototype.normalize = function(b) {
   	  b.storage[i+1] * b.storage[i+1] +
   	  b.storage[i+2] * b.storage[i+2] +
   	  b.storage[i+3] * b.storage[i+3] ;
-  	  var linv = 1 / sqrt(l2);
+  	  var linv = 1 / Math.sqrt(l2);
     this.storage[i  ] = b.storage[i  ] * linv;
     this.storage[i+1] = b.storage[i+1] * linv;
     this.storage[i+2] = b.storage[i+2] * linv;
@@ -92,4 +92,15 @@ Vec4Array.prototype.transform = function(v, m) {
        v.storage[i+3] * m.storage[15] ;
   }
   return this;  
+};
+
+/**
+ * @method commit
+ * @memberof Vec4Array.prototype  
+ * @description Sets the value of the vector array to a WebGL vec4 array uniform variable.
+ * @param {WebGLRenderingContext} gl - rendering context
+ * @param {WebGLUniformLocation} uniformLocation - location of the uniform variable in the currently used WebGL program
+ */
+Vec4Array.prototype.commit = function(gl, uniformLocation){
+  gl.uniform4fv(uniformLocation, this.storage);
 };

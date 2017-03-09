@@ -119,10 +119,9 @@ VecArray.prototype.divWithVec1s = function(b, c) {
  * @return {VecArray} this
  */
 VecArray.prototype.addAll = function(b, c) {
-  var j = 0;
-  for(var i=0; i<this.storage.length; k++) {
-    for(var k=0; k<c.storage.length; i++, j++, k++) {
-    this.storage[i] = b.storage[j] + c.storage[k];
+  for(var i=0; i<this.storage.length;) {
+    for(var k=0; k<c.storage.length; i++, k++) {
+    this.storage[i] = b.storage[i] + c.storage[k];
     }
   }
   return this;  
@@ -137,10 +136,9 @@ VecArray.prototype.addAll = function(b, c) {
  * @return {VecArray} this
  */
 VecArray.prototype.subAll = function(b, c) {
-  var j = 0;
-  for(var i=0; i<this.storage.length; k++) {
-    for(var k=0; k<c.storage.length; i++, j++, k++) {
-    this.storage[i] = b.storage[j] - c.storage[k];
+  for(var i=0; i<this.storage.length;) {
+    for(var k=0; k<c.storage.length; i++, k++) {
+    this.storage[i] = b.storage[i] - c.storage[k];
     }
   }
   return this;  
@@ -155,10 +153,9 @@ VecArray.prototype.subAll = function(b, c) {
  * @return {VecArray} this
  */
 VecArray.prototype.mulAll = function(b, c) {
-  var j = 0;
-  for(var i=0; i<this.storage.length; k++) {
-    for(var k=0; k<c.storage.length; i++, j++, k++) {
-    this.storage[i] = b.storage[j] * c.storage[k];
+  for(var i=0; i<this.storage.length;) {
+    for(var k=0; k<c.storage.length; i++, k++) {
+    this.storage[i] = b.storage[i] * c.storage[k];
     }
   }
   return this;  
@@ -173,10 +170,9 @@ VecArray.prototype.mulAll = function(b, c) {
  * @return {VecArray} this
  */
 VecArray.prototype.divAll = function(b, c) {
-  var j = 0;
-  for(var i=0; i<this.storage.length; k++) {
-    for(var k=0; k<c.storage.length; i++, j++, k++) {
-    this.storage[i] = b.storage[j] / c.storage[k];
+  for(var i=0; i<this.storage.length;) {
+    for(var k=0; k<c.storage.length; i++, k++) {
+    this.storage[i] = b.storage[i] / c.storage[k];
     }
   }
   return this;  
@@ -226,15 +222,4 @@ VecArray.prototype.clamp = function() {
     }
   }
   return this;  
-};
-
-/**
- * @method commit
- * @memberof VecArray.prototype  
- * @description Sets the value of the vector array to a WebGL vec1 array uniform variable.
- * @param gl {WebGLRenderingContext}
- * @param uniformLocation {WebGLUniformLocation}
- */
-VecArray.prototype.commit = function(gl, uniformLocation){
-  gl.uniform1fv(uniformLocation, this.storage);
 };

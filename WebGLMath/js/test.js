@@ -14,13 +14,13 @@ for(var i = 0; i<50; i++){
   a = Vec1.random(-2, 100);
   console.assert(a.x >= -2);
   console.assert(a.x < 100);
-  b.$random(34, 35);
+  b.setRandom(34, 35);
   console.assert(b.x >= 34);
   console.assert(b.x < 35);
   a.clamp(0, 1);
   console.assert(a.x >= 0);
   console.assert(a.x <= 1);
-  a.$clamp(b, 34.4, 34.5);
+  a.setClamped(b, 34.4, 34.5);
   console.assert(a.x >= 34.4);
   console.assert(a.x <= 34.5);
 }
@@ -30,28 +30,28 @@ a.set(b).add(c);
 console.assert(a.x === -2);
 a = b.plus(c);
 console.assert(a.x === -2);
-a.$add(b, c);
+a.setSum(b, c);
 console.assert(a.x === -2);
 
 a.set(b).sub(c);
 console.assert(a.x === 4);
 a = b.minus(c);
 console.assert(a.x === 4);
-a.$sub(b, c);
+a.setDifference(b, c);
 console.assert(a.x === 4);
 
 a.set(b).mul(c);
 console.assert(a.x === -3);
 a = b.times(c);
 console.assert(a.x === -3);
-a.$mul(b, c);
+a.setProduct(b, c);
 console.assert(a.x === -3);
 
 a.set(b).div(c);
 console.assert(approx(a.x , -1/3));
 a = b.over(c);
 console.assert(approx(a.x , -1/3));
-a.$div(b, c);
+a.setQuotient(b, c);
 console.assert(approx(a.x , -1/3));
 
 b.set(2);
@@ -59,7 +59,7 @@ a = b.times(7);
 console.assert( approx(a.x, 14) );
 a.set(b).mul(7);
 console.assert( approx(a.x, 14) );
-a.$scale(b, 7);
+a.setScaled(b, 7);
 console.assert( approx(a.x, 14) );
 
 b.set(4);
@@ -67,11 +67,11 @@ c.set(3);
 console.assert( approx(b.dot(c), 12) );
 
 console.assert( approx(
-	a.$dotOfVec3s(new Vec3(1, 2, 3), new Vec3(1, -1, 0)).x,
+	a.setDotProductOfVec3s(new Vec3(1, 2, 3), new Vec3(1, -1, 0)).x,
 	-1) );
 	
 console.assert( approx(
-	a.$lengthOfVec3(new Vec3(3, 4, 0)).x,
+	a.setLengthOfVec3(new Vec3(3, 4, 0)).x,
 	5) );
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -93,7 +93,7 @@ for(var i = 0; i<50; i++){
   console.assert(a.x < 100);
   console.assert(a.y >= -3);
   console.assert(a.y < 300);  
-  b.$random(34, 35);
+  b.setRandom(34, 35);
   console.assert(b.x >= 34);
   console.assert(b.x < 35);
   console.assert(b.y >= 34);
@@ -101,7 +101,7 @@ for(var i = 0; i<50; i++){
   a.clamp(0, 1);
   console.assert(a.x >= 0);
   console.assert(a.x <= 1);
-  a.$clamp(b, 34.4, 34.5);
+  a.setClamped(b, 34.4, 34.5);
   console.assert(a.y >= 34.4);
   console.assert(a.y <= 34.5);
 }
@@ -113,7 +113,7 @@ console.assert(a.y === 7);
 a = b.plus(c);
 console.assert(a.x === -2);
 console.assert(a.y === 7);
-a.$add(b, c);
+a.setSum(b, c);
 console.assert(a.x === -2);
 console.assert(a.y === 7);
 
@@ -123,7 +123,7 @@ console.assert(a.y === 1);
 a = b.minus(c);
 console.assert(a.x === 4);
 console.assert(a.y === 1);
-a.$sub(b, c);
+a.setDifference(b, c);
 console.assert(a.x === 4);
 console.assert(a.y === 1);
 
@@ -133,7 +133,7 @@ console.assert(a.y === 12);
 a = b.times(c);
 console.assert(a.x === -3);
 console.assert(a.y === 12);
-a.$mul(b, c);
+a.setProduct(b, c);
 console.assert(a.x === -3);
 console.assert(a.y === 12);
 
@@ -143,7 +143,7 @@ console.assert(approx(a.y , 4/3));
 a = b.over(c);
 console.assert(approx(a.x , -1/3));
 console.assert(approx(a.y , 4/3));
-a.$div(b, c);
+a.setQuotient(b, c);
 console.assert(approx(a.x , -1/3));
 console.assert(approx(a.y , 4/3));
 
@@ -154,7 +154,7 @@ console.assert( approx(a.y, 7) );
 a.set(b).mul(7);
 console.assert( approx(a.x, 14) );
 console.assert( approx(a.y, 7) );
-a.$scale(b, 7);
+a.setScaled(b, 7);
 console.assert( approx(a.x, 14) );
 console.assert( approx(a.y, 7) );
 
@@ -193,7 +193,7 @@ for(var i = 0; i<50; i++){
   console.assert(a.y < 300);  
   console.assert(a.z >= 0);
   console.assert(a.z < 1);    
-  b.$random(34, 35);
+  b.setRandom(34, 35);
   console.assert(b.x >= 34);
   console.assert(b.x < 35);
   console.assert(b.y >= 34);
@@ -203,7 +203,7 @@ for(var i = 0; i<50; i++){
   a.clamp(0, 1);
   console.assert(a.x >= 0);
   console.assert(a.x <= 1);
-  a.$clamp(b, 34.4, 34.5);
+  a.setClamped(b, 34.4, 34.5);
   console.assert(a.y >= 34.4);
   console.assert(a.y <= 34.5);
 }
@@ -217,7 +217,7 @@ a = b.plus(c);
 console.assert(a.x === -2);
 console.assert(a.y === 7);
 console.assert(a.z === 4); 
-a.$add(b, c);
+a.setSum(b, c);
 console.assert(a.x === -2);
 console.assert(a.y === 7);
 console.assert(a.z === 4); 
@@ -230,7 +230,7 @@ a = b.minus(c);
 console.assert(a.x === 4);
 console.assert(a.y === 1);
 console.assert(a.z === -2); 
-a.$sub(b, c);
+a.setDifference(b, c);
 console.assert(a.x === 4);
 console.assert(a.y === 1);
 console.assert(a.z === -2); 
@@ -243,7 +243,7 @@ a = b.times(c);
 console.assert(a.x === -3);
 console.assert(a.y === 12);
 console.assert(a.z === 3);
-a.$mul(b, c);
+a.setProduct(b, c);
 console.assert(a.x === -3);
 console.assert(a.y === 12);
 console.assert(a.z === 3);
@@ -256,7 +256,7 @@ a = b.over(c);
 console.assert(approx(a.x , -1/3));
 console.assert(approx(a.y , 4/3));
 console.assert(approx(a.z , 1/3));
-a.$div(b, c);
+a.setQuotient(b, c);
 console.assert(approx(a.x , -1/3));
 console.assert(approx(a.y , 4/3));
 console.assert(approx(a.z , 1/3));
@@ -270,7 +270,7 @@ a.set(b).mul(7);
 console.assert( approx(a.x, 14) );
 console.assert( approx(a.y, 7) );
 console.assert( approx(a.z, -35) );
-a.$scale(b, 7);
+a.setScaled(b, 7);
 console.assert( approx(a.x, 14) );
 console.assert( approx(a.y, 7) );
 console.assert( approx(a.z, -35) );

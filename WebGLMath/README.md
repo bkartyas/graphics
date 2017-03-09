@@ -44,7 +44,7 @@ v.mul(m); // v <= (-2, 1, 3, 1);
 console.table(v);
 ```
 
-Only 4x4 matrices, i.e. [Mat4](Mat4.html)s, are supported. When transforming [Vec2](Vec2.html)s and [Vec3](Vec3.html)s, there are two options. When using methods [Vec2.prototype.xy01mul](Vec2#xy01mul) or [Vec3.prototype.xyz1mul](Vec3.html#xyz1mul), the vector is augmented to a homogeneous four-element position by appending zeros. The extra coordinates from the result are discarded.
+Only 4x4 matrices, i.e. [Mat4](Mat4.html)s, are supported. When transforming [Vec2](Vec2.html)s and [Vec3](Vec3.html)s, there are two options. When using methods [Vec2.prototype.xy01mul](Vec2#xy01mul) or [Vec3.prototype.xyz1mul](Vec3.html#xyz1mul), the vector is augmented to a homogeneous four-element position by appending a zero and a one, or a one, respectively. The extra coordinates from the result are discarded.
 ```javascript
 var v = new Vec2(1, 2);
 var m = new Mat4().translate(3, 4);

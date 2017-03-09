@@ -51,7 +51,7 @@ Vec2Array.prototype.normalize = function(b) {
   	var l2 =
   	  b.storage[i  ] * b.storage[i  ] +
   	  b.storage[i+1] * b.storage[i+1] ;
-    var linv = 1 / sqrt(l2);
+    var linv = 1 / Math.sqrt(l2);
     this.storage[i  ] = b.storage[i  ] * linv;
     this.storage[i+1] = b.storage[i+1] * linv;
   }

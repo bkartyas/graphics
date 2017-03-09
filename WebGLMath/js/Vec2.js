@@ -16,10 +16,11 @@
  * <tr><td>-</td><td>[minus]{@link Vec2#minus}</td></tr>
  * <tr><td>*</td><td>[times]{@link Vec2#times}</td></tr>
  * <tr><td>/</td><td>[over]{@link Vec2#over}</td></tr>
+ * <tr><td>&middot;</td><td>[dot]{@link Vec2#dot}</td></tr> 
  * </table>
  * <BR> <code>a = b + c</code> can be computed as <code>var a = b.plus(c)</code>, when <code>a</code> does not yet exist, and performance does not matter. It is not required that <code>c</code> is a {@link Vec2}: it can be a vector of different length, an object literal, or its coordinates given as separate arguments.
  * <BR> <code>a.set(b).add(c)</code> is about three times faster. Variable <code>a</code> needs to exist, and be a {@link Vec2}. Neither b nor c are required to be {@link Vec2}s: they can be vectors of different length, object literals, or its coordinates given as separate arguments.
- * <BR> If <code>a</code>, <code>b</code> and <code>c</code> are {@link Vec2} instances, <code>a.$add(b, c)</code> can be used for optimum performance. It is seven times faster than <code>a.set(b).add(c)</code>, or twenty times faster than <code>a = b.plus(c)</code>.
+ * <BR> If <code>a</code>, <code>b</code> and <code>c</code> are {@link Vec2} instances, <code>a.setSum(b, c)</code> can be used for optimum performance. It is seven times faster than <code>a.set(b).add(c)</code>, or twenty times faster than <code>a = b.plus(c)</code>.
  * <BR> It is recommended to use optimized methods for time-critical per-frame tasks, while programmer-friendly interfaces are useful for one-time initializations, e.g. when constructing a scene.
  * @description  Without parameters, initializes the vector to (0, 0).
  * @param {Vec2 | Vec2 | Object | Number} [u=0] - Any object (properties x, y are interpreted as coordinates, if given), or a numerical value for coordinate x.
@@ -97,28 +98,28 @@ Vec2.random = function(minVal, maxVal) {
   var result = Object.create(Vec2.prototype);
   result.storage = new Float32Array(2);
   var mina = minVal && minVal.x || Number(minVal).valueOf() || 0;
-  var maxa = maxVal && maxVal.x || Number(maxVal).valueOf() || 1;  
+  var maxa = maxVal && ((maxVal.x-1) || (Number(maxVal).valueOf()-1) || 0) + 1;
   result.storage[0] = Math.random() * (maxa - mina) + mina;
   mina = minVal && minVal.y || Number(minVal).valueOf() || 0;
-  maxa = maxVal && maxVal.y || Number(maxVal).valueOf() || 1;  
+  maxa = maxVal && ((maxVal.y-1) || (Number(maxVal).valueOf()-1) || 0) + 1;  
   result.storage[1] = Math.random() * (maxa - mina) + mina;
   return result;
 };
 
 /**
- * @method $random
+ * @method setRandom
  * @memberof Vec2.prototype  
  * @description Fill the vector with random values that to lie between two further values, elementwise.
  * @param {Vec2 | Vec2 | Object | Number} [minVal=0] - Specifies the lower end of the random range. If a scalar is given, it applies to all channels.
  * @param {Vec2 | Vec2 | Object | Number} [maxVal=1] - Specifies the upper end of the random range. If a scalar is given, it applies to all channels.
  * @return {Vec2} this
  */
-Vec2.prototype.$random = function(minVal, maxVal) {
+Vec2.prototype.setRandom = function(minVal, maxVal) {
   var mina = minVal && minVal.x || Number(minVal).valueOf() || 0;
-  var maxa = maxVal && maxVal.x || Number(maxVal).valueOf() || 1;  
+  var maxa = maxVal && ((maxVal.x-1) || (Number(maxVal).valueOf()-1) || 0) + 1;  
   this.storage[0] = Math.random() * (maxa - mina) + mina;
   mina = minVal && minVal.y || Number(minVal).valueOf() || 0;
-  maxa = maxVal && maxVal.y || Number(maxVal).valueOf() || 1;  
+  maxa = maxVal && ((maxVal.y-1) || (Number(maxVal).valueOf()-1) || 0) + 1;  
   this.storage[1] = Math.random() * (maxa - mina) + mina;
   return this;  
 };
@@ -140,11 +141,11 @@ Vec2.prototype.clamp = function(minVal, maxVal) {
   if(this.storage[1] < mina){
     this.storage[1] = mina;
   }
-  var maxa = maxVal && maxVal.x || Number(maxVal).valueOf() || 1;
+  var maxa = maxVal && ((maxVal.x-1) || (Number(maxVal).valueOf()-1) || 0) + 1;
   if(this.storage[0] > maxa){
     this.storage[0] = maxa;
   }
-  maxa = maxVal && maxVal.y || Number(maxVal).valueOf() || 1;
+  maxa = maxVal && ((maxVal.y-1) || (Number(maxVal).valueOf()-1) || 0) + 1;
   if(this.storage[1] > maxa){
     this.storage[1] = maxa;
   }
@@ -152,7 +153,7 @@ Vec2.prototype.clamp = function(minVal, maxVal) {
 };
 
 /**
- * @method $clamp
+ * @method setClamped
  * @memberof Vec2.prototype  
  * @description Fast. Constrains a value to lie between two further values, elementwise, storing the result in this vector.
  * @param {Vec2} b - The value to constrain.
@@ -160,9 +161,9 @@ Vec2.prototype.clamp = function(minVal, maxVal) {
  * @param {Vec2 | Vec2 | Object | Number} [maxVal=1] - Specifies the upper end of the range into which to constrain the elements. If a scalar is given, it applies to all channels.
  * @return {Vec2} this
  */
-Vec2.prototype.$clamp = function(b, minVal, maxVal) {
+Vec2.prototype.setClamped = function(b, minVal, maxVal) {
   var mina = minVal && minVal.x || Number(minVal).valueOf() || 0;
-  var maxa = maxVal && maxVal.x || Number(maxVal).valueOf() || 1;  
+  var maxa = maxVal && ((maxVal.x-1) || (Number(maxVal).valueOf()-1) || 0) + 1;  
   if(b.storage[0] < mina){
     this.storage[0] = mina;
   } else if(b.storage[0] > maxa){
@@ -171,7 +172,7 @@ Vec2.prototype.$clamp = function(b, minVal, maxVal) {
     this.storage[0] = b.storage[0];
   }
   mina = minVal && minVal.y || Number(minVal).valueOf() || 0;
-  maxa = maxVal && maxVal.y || Number(maxVal).valueOf() || 1;  
+  maxa = maxVal && ((maxVal.y-1) || (Number(maxVal).valueOf()-1) || 0) + 1;  
   if(b.storage[1] < mina){
     this.storage[1] = mina;
   } else if(b.storage[1] > maxa){
@@ -228,14 +229,14 @@ Vec2.prototype.plus = function(u, v) {
 };
 
 /**
- * @method $add
+ * @method setSum
  * @memberof Vec2.prototype  
  * @description Fast. Adds the two argument vectors, storing the result in this vector.
  * @param {Vec2} b - Term 1.
  * @param {Vec2} c - Term 2. 
  * @return {Vec2} this
  */
-Vec2.prototype.$add = function(b, c) {
+Vec2.prototype.setSum = function(b, c) {
   this.storage[0] = b.storage[0] + c.storage[0];
   this.storage[1] = b.storage[1] + c.storage[1];
   return this;  
@@ -272,14 +273,14 @@ Vec2.prototype.minus = function(u, v) {
 };
 
 /**
- * @method $sub
+ * @method setDifference
  * @memberof Vec2.prototype  
  * @description Fast. Substracts the second argument vector from the first one, storing the result in this vector.
  * @param {Vec2} b - Minuend.
  * @param {Vec2} c - Subtrahend. 
  * @return {Vec2} this
  */
-Vec2.prototype.$sub = function(b, c) {
+Vec2.prototype.setDifference = function(b, c) {
   this.storage[0] = b.storage[0] - c.storage[0];
   this.storage[1] = b.storage[1] - c.storage[1];
   return this;  
@@ -325,7 +326,7 @@ Vec2.prototype.times = function(u, v) {
 Vec2.prototype.xy01times = function(m) {
   var result = Object.create(Vec2.prototype);
   result.storage = new Float32Array(2);
-  result.$xy01mul(this, m);
+  result.setxy01Transformed(this, m);
   return result;
 };
 
@@ -339,19 +340,19 @@ Vec2.prototype.xy01times = function(m) {
 Vec2.prototype.xy00times = function(m) {
   var result = Object.create(Vec2.prototype);
   result.storage = new Float32Array(2);
-  result.$xy00mul(this, m);
+  result.setxy00Transformed(this, m);
   return result;
 };
 
 /**
- * @method $mul
+ * @method setProduct
  * @memberof Vec2.prototype  
  * @description Fast. Multiplies, elementwise, the two argument vectors, storing the result in this vector.
  * @param {Vec2} b - Factor 1.
  * @param {Vec2} c - Factor 2. 
  * @return {Vec2} this
  */
-Vec2.prototype.$mul = function(b, c) {
+Vec2.prototype.setProduct = function(b, c) {
   this.storage[0] = b.storage[0] * c.storage[0];
   this.storage[1] = b.storage[1] * c.storage[1];
   return this;  
@@ -388,46 +389,46 @@ Vec2.prototype.over = function(u, v) {
 };
 
 /**
- * @method $div
+ * @method setQuotient
  * @memberof Vec2.prototype  
  * @description Fast. Divides, elementwise, the two argument vectors, storing the result in this vector.
  * @param {Vec2} b - Dividend.
  * @param {Vec2} c - Divisor. 
  * @return {Vec2} this
  */
-Vec2.prototype.$div = function(b, c) {
+Vec2.prototype.setQuotient = function(b, c) {
   this.storage[0] = b.storage[0] / c.storage[0];
   this.storage[1] = b.storage[1] / c.storage[1];
   return this;  
 };
 
 /**
- * @method $scale
+ * @method setScaled
  * @memberof Vec2.prototype  
  * @description Fast. Scales the vector by a scalar.
  * @param {Vec2} a - Vector to scale.
  * @param {Number} s - Scale factor. 
  * @return {Vec2} this
  */
-Vec2.prototype.$scale = function(a, s){
+Vec2.prototype.setScaled = function(a, s){
   this.storage[0] = a.x * s;
   this.storage[1] = a.y * s;
   return this;  
-}
+};
 
 /**
- * @method $scaleByInverse
+ * @method setScaledByInverse
  * @memberof Vec2.prototype  
  * @description Fast. Scales the vector by the reciprocal of scalar.
  * @param {Vec2} a - Vector to scale.
  * @param {Number} s - Scale factor inverse.
  * @return {Vec2} this
  */
-Vec2.prototype.$scaleByInverse = function(a, s){
+Vec2.prototype.setScaledByInverse = function(a, s){
   this.storage[0] = a.x / s;
   this.storage[1] = a.y / s;
   return this;  
-}
+};
 
 /**
  * @method length2
@@ -478,15 +479,15 @@ Vec2.prototype.direction = function() {
 };
 
 /**
- * @method normalize
+ * @method setNormalized
  * @memberof Vec2.prototype  
  * @description Scales the argmument vector by the inverse of its length, storing the result in this vector.
  * @return {Vec2} this
  */
-Vec2.prototype.$normalize = function(b) {
+Vec2.prototype.setNormalized = function(b) {
   var l = b.length();
-  this.storage[0] = b.storage[0] / length;
-  this.storage[1] = b.storage[1] / length;
+  this.storage[0] = b.storage[0] / l;
+  this.storage[1] = b.storage[1] / l;
   return this;
 };
 
@@ -529,13 +530,13 @@ Vec2.prototype.xy01mul = function(m) {
 };
 
 /**
- * @method $xy01mul
+ * @method setxy01Transformed
  * @memberof Vec2.prototype
  * @description Multiplies the argument vector (considering it a row vector, augmented by 0, 1 to a homogeneous position vector) with the argument matrix, from the right. The contents of this are overwritten with the transformed vector with the result. See [xy01times]{@link Vec2#xy01times} for a version creating a new vector instance.
  * @param m {Mat4} The 4x4 linear homogeneous transformation matrix using column-major representation.
  * @return {Vec2} this
  */
-Vec2.prototype.$xy01mul = function(v, m) {
+Vec2.prototype.setxy01Transformed = function(v, m) {
   var x = v.storage[0];
   var y = v.storage[1];
   var w = 
@@ -573,13 +574,13 @@ Vec2.prototype.xy00mul = function(m) {
 };
 
 /**
- * @method $xy00mul
+ * @method setxy00Transformed
  * @memberof Vec2.prototype
  * @description Multiplies the argument vector (considering it a row vector, augmented by 0 to a homogeneous direction vector) with the argument matrix, from the right. The contents of this are overwritten with the transformed vector with the result. See [xy00times]{@link Vec2#xy00times} for a version creating a new vector instance.
  * @param m {Mat4} The 4x4 linear homogeneous transformation matrix using column-major representation.
  * @return {Vec2} this
  */
- Vec2.prototype.$xy00mul = function(v, m) {
+ Vec2.prototype.setxy00Transformed = function(v, m) {
   var x = v.storage[0];
   var y = v.storage[1];
   this.storage[0] =
@@ -595,8 +596,8 @@ Vec2.prototype.xy00mul = function(m) {
  * @method commit
  * @memberof Vec2.prototype  
  * @description Sets the value of the vector to a WebGL vec2 uniform variable.
- * @param gl {WebGLRenderingContext}
- * @param uniformLocation {WebGLUniformLocation}
+ * @param {WebGLRenderingContext} gl - rendering context
+ * @param {WebGLUniformLocation} uniformLocation - location of the uniform variable in the currently used WebGL program
  */
 Vec2.prototype.commit = function(gl, uniformLocation){
   gl.uniform2fv(uniformLocation, this.storage);

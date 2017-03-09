@@ -77,7 +77,7 @@ Vec3Array.prototype.normalize = function(b) {
   	  b.storage[i  ] * b.storage[i  ] +
   	  b.storage[i+1] * b.storage[i+1] +
   	  b.storage[i+2] * b.storage[i+2] ;
-    var linv = 1 / sqrt(l2);
+    var linv = 1 / Math.sqrt(l2);
     this.storage[i  ] = b.storage[i  ] * linv;
     this.storage[i+1] = b.storage[i+1] * linv;
     this.storage[i+2] = b.storage[i+2] * linv;
@@ -95,9 +95,9 @@ Vec3Array.prototype.normalize = function(b) {
 Vec3Array.prototype.cross = function(b, c) {
   var result = Object.create(Vec3.prototype);
   result.storage = new Float32Array(3);
-  this.storage[0] = b.storage[1] * c.storage[2] - this.storage[2] * c.storage[1];
-  this.storage[1] = b.storage[2] * c.storage[0] - this.storage[0] * c.storage[2];
-  this.storage[2] = b.storage[0] * c.storage[1] - this.storage[1] * c.storage[0];
+  this.storage[0] = b.storage[1] * c.storage[2] - b.storage[2] * c.storage[1];
+  this.storage[1] = b.storage[2] * c.storage[0] - b.storage[0] * c.storage[2];
+  this.storage[2] = b.storage[0] * c.storage[1] - b.storage[1] * c.storage[0];
 //TODO
   return result;
 };
@@ -153,4 +153,15 @@ Vec3Array.prototype.xyz0mul = function(v, m) {
        v.storage[i+2] * m.storage[10] ;
   }
   return this;  
+};
+
+/**
+ * @method commit
+ * @memberof Vec3Array.prototype  
+ * @description Sets the value of the vector array to a WebGL vec3 array uniform variable.
+ * @param {WebGLRenderingContext} gl - rendering context
+ * @param {WebGLUniformLocation} uniformLocation - location of the uniform variable in the currently used WebGL program
+ */
+Vec3Array.prototype.commit = function(gl, uniformLocation){
+  gl.uniform3fv(uniformLocation, this.storage);
 };

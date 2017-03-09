@@ -411,8 +411,8 @@ Mat4.prototype.invert = function() {
  * @method commit
  * @memberof Mat4.prototype  
  * @description Sets the value of the matrix to a WebGL mat4 uniform variable.
- * @param gl {WebGLRenderingContext}
- * @param uniformLocation {WebGLUniformLocation}
+ * @param {WebGLRenderingContext} gl - rendering context
+ * @param {WebGLUniformLocation} uniformLocation - location of the uniform variable in the currently used WebGL program
  */
 Mat4.prototype.commit = function(gl, uniformLocation){
   gl.uniformMatrix4fv(uniformLocation, false, this.storage);
