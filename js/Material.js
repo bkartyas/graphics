@@ -21,9 +21,6 @@ var Material = function(gl, program) {
 	  Object.defineProperty(theMaterial, uniformName,
 		  {value: reflectionVariable} ); 
 	}
-
-    Object.defineProperty(theMaterial, uniformName,
-      {value: reflectionVariable} ); 
   }); 
 }; 
 
@@ -32,13 +29,11 @@ Material.prototype.commit = function() {
 	this.program.commit(); 
 	var theMaterial = this; 
     Object.keys(this.program.uniforms).forEach( function(uniformName) { 
-    var uniform = theMaterial.program.uniforms[uniformName]; 
-    if(uniformName in Material.shared) {
-		Material.shared[uniformName].commit(gl, uniform.location);
-	} else {
-		theMaterial[uniformName].commit(gl, uniform.location);
-}
-
-    theMaterial[uniformName].commit(gl, uniform.location); 
-  }); 
+	    var uniform = theMaterial.program.uniforms[uniformName]; 
+	    if(uniformName in Material.shared) {
+			Material.shared[uniformName].commit(gl, uniform.location);
+		} else {
+			theMaterial[uniformName].commit(gl, uniform.location);
+		}
+   }); 
 };

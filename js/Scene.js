@@ -5,13 +5,14 @@ var Scene = function(gl) {
   this.quadGeometry = new QuadGeometry(gl);
 
   this.timeAtLastFrame = new Date().getTime();
-
-  this.offset = new Vec2(+1/12,+1/12);
   
   this.material = new Material(gl, this.solidProgram);
 
-  this.material.colorTexture.set(new Texture2D(gl, "media/asteroid.png"));
-  this.material.texOffset.set(0.1, 0.4);
+  this.material.colorTexture.set(new Texture2D(gl, "media/boom.png"));
+  this.material.MVP.set(1/10, 0.0, 0.0, 1/2,
+                        0.0, 1/6, 0.0, 1/2,
+                        0.0, 0.0, 1.0, 0.0,
+                        0.0, 0.0, 0.0, 1.0); 
 
 };
 
@@ -25,12 +26,49 @@ Scene.prototype.update = function(gl, keysPressed) {
   gl.clearColor(164/255, 66/255, 220/255, 1.0);
   gl.clearDepth(1.0);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-  
+
+  var a = 1/6 * Math.floor(dt*speed);
+  var b = 1/6 * Math.floor(dt*speed/6);
+
+  this.material.offsetMatrix.set(1/12, 0.0, 0.0, a+1/12,
+                                 0.0, 1/12, 0.0, b+1/12,
+                                 0.0, 0.0, 1.0, 0.0,
+                                 0.0, 0.0, 0.0, 1.0); 
+
   //this.solidProgram.commit();
   //this.texture.commit(gl, gl.getUniformLocation(this.solidProgram.glProgram, "colorTexture"), 0);
   
   this.material.commit();
   this.quadGeometry.draw();
+
+
+
+  //this.material.colorTexture.set(new Texture2D(gl, "media/boom.png"));
+  /*this.material.MVP.set(1/6, 0.0, 0.0, -1/2,
+                        0.0, 1/6, 0.0, -1/2,
+                        0.0, 0.0, 1.0, 0.0,
+                        0.0, 0.0, 0.0, 1.0); 
+  this.material.offsetMatrix.set(1/12, 0.0, 0.0, a+1/12,
+                                 0.0, 1/12, 0.0, b+1/12,
+                                 0.0, 0.0, 1.0, 0.0,
+                                 0.0, 0.0, 0.0, 1.0); 
+
+  //this.solidProgram.commit();
+  //this.texture.commit(gl, gl.getUniformLocation(this.solidProgram.glProgram, "colorTexture"), 0);
+  
+  this.material.commit();
+  this.quadGeometry.draw();
+  /*this.material.colorTexture.set(new Texture2D(gl, "media/asteroid.png"));
+  this.material.MVP.set(1/4, 0.0, 0.0, 0.0,
+                        0.0, 1/4, 0.0, 0.0,
+                        0.0, 0.0, 1.0, 0.0,
+                        0.0, 0.0, 0.0, 1.0); 
+  this.material.offsetMatrix.set(1, 0.0, 0.0, 0,
+                                 0.0, 1, 0.0, 0,
+                                 0.0, 0.0, 1.0, 0.0,
+                                 0.0, 0.0, 0.0, 1.0); 
+  this.material.commit();
+  this.quadGeometry.draw();*/
 };
 
 
