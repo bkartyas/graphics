@@ -1,12 +1,11 @@
 Shader.source[document.currentScript.src.split('js/shaders/')[1]] = `
 	attribute vec3 vertexPosition;
-	uniform mat4 MVP;
+	uniform mat4 modelViewProjMatrix;
 	uniform mat4 offsetMatrix;
 	varying vec2 tex;
-	
-	void main(void) {
-		gl_Position = MVP * vec4(vertexPosition, 1);
-		tex = (offsetMatrix * vec4(vertexPosition, 1)).xy;
 
+	void main(void) {
+		gl_Position = vec4(vertexPosition, 1.0) * modelViewProjMatrix;
+		tex = (offsetMatrix * vec4(vertexPosition, 1.0)).xy;
 	}
 `;
