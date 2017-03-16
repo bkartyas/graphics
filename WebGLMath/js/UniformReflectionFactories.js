@@ -27,7 +27,7 @@ var UniformReflectionFactories = {
       case gl.FLOAT_VEC4   : return this.vec4(arraySize);
       case gl.FLOAT_MAT4   : return this.mat4(arraySize);
       case gl.SAMPLER_2D   : return this.sampler2D(arraySize, samplerIndex);
-      case gl.SAMPLER_CUBE : return this.samplerCUBE(arraySize, samplerIndex);      
+      case gl.SAMPLER_CUBE : return this.samplerCube(arraySize, samplerIndex);      
     }
   },
   /**

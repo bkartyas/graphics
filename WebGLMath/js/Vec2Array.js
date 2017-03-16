@@ -96,3 +96,14 @@ Vec2Array.prototype.xy00mul = function(v, m) {
   }
   return this;  
 };
+
+/**
+ * @method commit
+ * @memberof Vec2Array.prototype  
+ * @description Sets the value of the vector array to a WebGL vec2 array uniform variable.
+ * @param {WebGLRenderingContext} gl - rendering context
+ * @param {WebGLUniformLocation} uniformLocation - location of the uniform variable in the currently used WebGL program
+ */
+Vec2Array.prototype.commit = function(gl, uniformLocation){
+  gl.uniform2fv(uniformLocation, this.storage);
+};
