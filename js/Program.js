@@ -6,36 +6,37 @@ var Program = function(gl, vertexShader, fragmentShader) {
   gl.attachShader(this.glProgram, fragmentShader.glShader);
 
   gl.bindAttribLocation(this.glProgram, 0, 'vertexPosition');
-  gl.bindAttribLocation(this.glProgram, 1, 'vertexNormal');  
-  gl.bindAttribLocation(this.glProgram, 2, 'vertexTexCoord');  
+  gl.bindAttribLocation(this.glProgram, 1, 'vertexNormal');
+  gl.bindAttribLocation(this.glProgram, 2, 'vertexTexCoord');
 
   gl.linkProgram(this.glProgram);
   if (!gl.getProgramParameter(this.glProgram, gl.LINK_STATUS))
     throw new Error('Could not link shaders [vertex shader:' + vertexShader.sourceFileName + ']:[fragment shader: ' + fragmentShader.sourceFileName + ']\n' + gl.getProgramInfoLog(this.glProgram));
-	
-  var textureUnitCount=0; 
-  this.uniforms = {}; 
+
+  var textureUnitCount=0;
+  this.uniforms = {};
   var nUniforms = gl.getProgramParameter(
-               this.glProgram, gl.ACTIVE_UNIFORMS); 
-  
-  for(var i=0; i<nUniforms; i++){ 
-    var glUniform = gl.getActiveUniform(this.glProgram, i); 
-    var uniform = { 
-      type      : glUniform.type, 
-      arraySize : glUniform.size || 1, 
+               this.glProgram, gl.ACTIVE_UNIFORMS);
+
+  for(var i=0; i<nUniforms; i++){
+    var glUniform = gl.getActiveUniform(this.glProgram, i);
+    var uniform = {
+      type      : glUniform.type,
+      arraySize : glUniform.size || 1,
       location  : gl.getUniformLocation(
-                         this.glProgram, glUniform.name) 
-    }; 
-    if(glUniform.type === gl.SAMPLER_2D || 
-            glUniform.type === gl.SAMPLER_CUBE){ 
-      uniform.textureUnit = textureUnitCount; 
-      textureUnitCount += uniform.arraySize; 
-    } 
-    this.uniforms[glUniform.name.split('[')[0]] = uniform; 
+                         this.glProgram, glUniform.name)
+    };
+    if(glUniform.type === gl.SAMPLER_2D ||
+            glUniform.type === gl.SAMPLER_CUBE){
+      uniform.textureUnit = textureUnitCount;
+      textureUnitCount += uniform.arraySize;
+    }
+    this.uniforms[glUniform.name.split('[')[0]] = uniform;
   }
-  
-  gl.enable(gl.BLEND);
-  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+  gl.enable(gl.DEPTH_TEST);
+  /*gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);*/
 };
 
 Program.prototype.commit = function(){

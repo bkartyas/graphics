@@ -1,11 +1,19 @@
 Shader.source[document.currentScript.src.split('js/shaders/')[1]] = `
 	attribute vec3 vertexPosition;
+	attribute vec3 vertexNormal;
+	attribute vec2 vertexTexCoord;
+	uniform mat4 modelMatrix;
+	uniform mat4 modelMatrixInverse;
 	uniform mat4 modelViewProjMatrix;
-	uniform mat4 offsetMatrix;
+	varying vec4 worldPos;
+	varying vec4 worldNormal;
 	varying vec2 tex;
+
 
 	void main(void) {
 		gl_Position = vec4(vertexPosition, 1.0) * modelViewProjMatrix;
-		tex = (offsetMatrix * vec4(vertexPosition, 1.0)).xy;
+		worldPos = vec4(vertexPosition, 1.0);
+		worldNormal = modelMatrixInverse * vec4(vertexNormal, 1.0);
+		tex = vertexTexCoord;
 	}
 `;

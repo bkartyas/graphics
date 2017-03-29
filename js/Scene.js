@@ -1,97 +1,68 @@
 var Scene = function(gl) {
   this.vsIdle = new Shader(gl, gl.VERTEX_SHADER, "idle_vs.essl");
   this.fsSolid = new Shader(gl, gl.FRAGMENT_SHADER, "solid_fs.essl");
+  this.skyCubeTexture = new TextureCube(gl, [
+                                  "media/envmap/posx512.jpg",
+                                  "media/envmap/negx512.jpg",
+                                  "media/envmap/posy512.jpg",
+                                  "media/envmap/negy512.jpg",
+                                  "media/envmap/posz512.jpg",
+                                  "media/envmap/negz512.jpg",]);
   this.solidProgram = new Program(gl, this.vsIdle, this.fsSolid);
   this.quadGeometry = new QuadGeometry(gl);
 
   this.timeAtLastFrame = new Date().getTime();
   this.accdt = 0;
-  this.nextAsteroid = 0;
+  this.speed = 2;
+  this.r = 15;
 
-  this.camera = new OrthoCamera();
+  this.camera = new PerspectiveCamera();
+  this.camera.setAspectRatio(16/9);
 
-  this.asteroidMaterial = new Material(gl, this.solidProgram);
-  this.rocketMaterial = new Material(gl, this.solidProgram);
-  this.bulletMaterial = new Material(gl, this.solidProgram);
-  this.backgroundMaterial = new Material(gl, this.solidProgram);
+  this.materials = [];
+  this.materials.push(new Material(gl, this.solidProgram));
+  this.materials.push(new Material(gl, this.solidProgram));
 
-  this.asteroidMaterial.colorTexture.set(new Texture2D(gl, "media/asteroid.png"));
-  this.rocketMaterial.colorTexture.set(new Texture2D(gl, "media/rocket.png"));
-  this.bulletMaterial.colorTexture.set(new Texture2D(gl, "media/bullet.png"));
-  this.backgroundMaterial.colorTexture.set(new Texture2D(gl, "media/background.png"));
+  this.materials[0].colorTexture.set(new Texture2D(gl, "media/slowpoke/YadonDh.png"));
+  this.materials[1].colorTexture.set(new Texture2D(gl, "media/slowpoke/YadonEyeDh.png"));
+  this.materials[0].envmapTexture.set(this.skyCubeTexture);
+  this.materials[1].envmapTexture.set(this.skyCubeTexture);
+  this.materials[0].lightColor.set(new Vec3(0.0,1.0,1.0));
+  this.materials[1].lightColor.set(new Vec3(0.0,1.0,1.0));
 
-  //this.boomTexture = new Texture2D(gl, "media/boom.png");
-  this.background = new GameObject2D(new Mesh(this.quadGeometry, this.backgroundMaterial), new Vec3(0, 0, 0));
-  this.rocket = new Rocket(new Mesh(this.quadGeometry, this.rocketMaterial), new Vec3(0, -0.85, 0));
+  this.mesh = new MultiMesh(gl, "media/slowpoke/Slowpoke.json", this.materials);
 
-  this.objects = [ this.rocket ];
-
-  this.background.mesh.material.offsetMatrix.set(1/2, 0.0, 0.0, 1/2,
-                                                 0.0, 1/4, 0.0, 1/2,
-                                                 0.0, 0.0, 0.0, 0.0,
-                                                 0.0, 0.0, 0.0, 1.0);
-
+  this.slowpoke = new GameObject2D(this.mesh);
 };
 
 Scene.prototype.update = function(gl, keysPressed) {
   var timeAtThisFrame = new Date().getTime();
   var dt = (timeAtThisFrame - this.timeAtLastFrame) / 1000.0;
   this.timeAtLastFrame = timeAtThisFrame;
-  this.accdt += dt;
 
-  if(this.accdt > this.nextAsteroid){
-    this.accdt = 0;
-    this.nextAsteroid = Math.random() * 3 + 2;
-    this.objects.push(new Asteroid(new Mesh(this.quadGeometry, this.asteroidMaterial), new Vec3(Math.random() * 2 - 1, 1.2, 0)));
-  }
-
-  if(!!this.rocket){
-    if(keysPressed["SPACE"]){
-      if(this.rocket.shot(dt)){
-        this.objects.push(new Bullet(new Mesh(this.quadGeometry, this.bulletMaterial), new Vec3(this.rocket.object.position.x, -0.6, 0)));
-      }
-    }
-
-    if(keysPressed["A"]){
-      this.rocket.moveLeft(dt);
-    }
-
-    if(keysPressed["D"]){
-      this.rocket.moveRight(dt);
-    }
-  }
+  var camera = this.camera;
 
   // clear the screen
   gl.clearColor(164/255, 66/255, 220/255, 1.0);
   gl.clearDepth(1.0);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-  this.background.draw(this.camera);
-  /*var a = 1/6 * Math.floor(dt*speed);
-  var b = 1/6 * Math.floor(dt*speed/6);*/
+  this.accdt += dt;
+  this.materials[0].lightPos.set(new Vec3(Math.sin(this.accdt*this.speed)*this.r,0.0,Math.cos(this.accdt*this.speed)*this.r));
+  this.materials[1].lightPos.set(new Vec3(Math.sin(this.accdt*this.speed)*this.r,0.0,Math.cos(this.accdt*this.speed)*this.r));
+  //camera.position = new Vec3(Math.sin(this.accdt*this.speed)*this.r,0.0,-20+Math.cos(this.accdt*this.speed)*this.r);
+  //this.materials[1].lightPos.set(new Vec3(Math.sin(this.accdt*this.speed)*this.r,0.0,-20.0+Math.cos(this.accdt*this.speed)*this.r));
 
-  this.rocket.object.updateModelTransformation();
-  this.rocket.object.collisions(this.objects);
-  this.rocket.object.draw(this.camera);
-  var dead = this.rocket.object.dead;
-  if(dead){ this.rocket = null; }
+  camera.move(dt, keysPressed);
 
-  for(let i = 1; i < this.objects.length; i++){
-    this.objects[i].object.updateModelTransformation();
-    this.objects[i].object.draw(this.camera);
-
-    this.objects[i].object.collisions(this.objects);
-  }
-
-  for(let i = 1; i < this.objects.length; i++){
-    this.objects[i].move(dt);
-  }
-
-  for(let i = 1; i < this.objects.length; i++){
-    var dead = this.objects[i].object.dead;
-
-    if(dead){ this.objects.splice(i, 1); }
-  }
-
+  canvas.onmousedown = function(event) {
+    camera.mouseDown();
+  };
+  canvas.onmousemove = function(event) {
+    camera.mouseMove(event);
+  };
+  canvas.onmouseup = function(event) {
+    camera.mouseUp();
+  };
+  this.slowpoke.draw(this.camera);
 };
-
