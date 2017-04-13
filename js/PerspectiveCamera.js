@@ -20,8 +20,7 @@ var PerspectiveCamera = function()
 
 
 
-PerspectiveCamera.worldUp = new Vec3(0, 1, 0);
-
+  PerspectiveCamera.worldUp = new Vec3(0, 1, 0);
   this.viewMatrix = new Mat4();
   this.projMatrix = new Mat4();
   this.rayDirMatrix = new Mat4();
@@ -58,12 +57,8 @@ PerspectiveCamera.prototype.updateProjMatrix = function()
                       mul(this.projMatrix);
 };
 
-
-
 PerspectiveCamera.prototype.updateRayDirMatrix = function(){
-  // önállóan megoldandó feladat
-  // de ráér
-  // az env mapping háttérhez kell csak
+  this.rayDirMatrix.set().translate(this.position).mul(this.viewProjMatrix).invert();
 };
 
 PerspectiveCamera.prototype.move = function(dt, keysPressed) {

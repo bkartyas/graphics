@@ -23,6 +23,20 @@ var Material = function(gl, program) {
 		  {value: reflectionVariable} );
 	}
   });
+
+  return new Proxy(this, {
+	  get : function(target, name){
+	    if(!(name in target)){
+	      console.error(
+	        "WARNING: Ignoring attempt" +
+	        " to access material property '" +
+	        name + "'. Is '" + name +
+	        "' an unused uniform?" );
+	      return Material.dummy;
+	    }
+	    return target[name];
+	  },
+	});
 };
 
 Material.prototype.commit = function() {
@@ -38,3 +52,12 @@ Material.prototype.commit = function() {
 		}
    });
 };
+
+Material.dummy = new Proxy(new Function(), {
+  get: function(target, name){
+    return Material.dummy;
+  },
+  apply: function(target, thisArg, args){
+    return Material.dummy;
+  },
+});

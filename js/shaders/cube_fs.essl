@@ -1,0 +1,9 @@
+Shader.source[document.currentScript.src.split('js/shaders/')[1]] = `
+	precision highp float;
+	uniform samplerCube envmapTexture;
+	varying vec3 rayDir;
+
+	void main(void) {
+		gl_FragColor = textureCube(envmapTexture, normalize(rayDir));
+	}
+`;
