@@ -28,6 +28,7 @@ var Scene = function(gl) {
   this.materials.push(new Material(gl, this.solidProgram));
 
   this.backgroundMaterial.envmapTexture.set(this.skyCubeTexture);
+  this.backgroundMaterial.noiseTexture.set(new Texture2D(gl, "media/noise/noise.png"));
   this.materials[0].colorTexture.set(new Texture2D(gl, "media/slowpoke/YadonDh.png"));
   this.materials[1].colorTexture.set(new Texture2D(gl, "media/slowpoke/YadonEyeDh.png"));
   this.materials[0].envmapTexture.set(this.skyCubeTexture);
@@ -77,6 +78,8 @@ Scene.prototype.update = function(gl, keysPressed) {
     this.mesh.meshes[i].material.viewPos.set(camera.position);
   }
 
+  this.backgroundMaterial.eye.set(this.camera.position);
+
   this.background.draw(this.camera);
-  this.slowpoke.draw(this.camera);
+  //this.slowpoke.draw(this.camera);
 };
