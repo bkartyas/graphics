@@ -17,7 +17,8 @@ var Scene = function(gl) {
   this.timeAtLastFrame = new Date().getTime();
   this.accdt = 0;
   this.speed = 2;
-  this.r = 15;
+  this.time = 0;
+  this.r = 3;
 
   this.camera = new PerspectiveCamera();
   this.camera.setAspectRatio(16/9);
@@ -28,13 +29,6 @@ var Scene = function(gl) {
   this.materials.push(new Material(gl, this.solidProgram));
 
   this.backgroundMaterial.envmapTexture.set(this.skyCubeTexture);
-  this.backgroundMaterial.noiseTexture.set(new Texture2D(gl, "media/noise/noise.png"));
-  this.materials[0].colorTexture.set(new Texture2D(gl, "media/slowpoke/YadonDh.png"));
-  this.materials[1].colorTexture.set(new Texture2D(gl, "media/slowpoke/YadonEyeDh.png"));
-  this.materials[0].envmapTexture.set(this.skyCubeTexture);
-  this.materials[1].envmapTexture.set(this.skyCubeTexture);
-  this.materials[0].lightColor.set(new Vec3(0.0,1.0,1.0));
-  this.materials[1].lightColor.set(new Vec3(0.0,1.0,1.0));
 
   this.backgroundMesh = new Mesh(this.quadGeometry, this.backgroundMaterial);
   this.mesh = new MultiMesh(gl, "media/slowpoke/Slowpoke.json", this.materials);
@@ -50,6 +44,7 @@ Scene.prototype.update = function(gl, keysPressed) {
   var timeAtThisFrame = new Date().getTime();
   var dt = (timeAtThisFrame - this.timeAtLastFrame) / 1000.0;
   this.timeAtLastFrame = timeAtThisFrame;
+  this.time += dt;
 
   var camera = this.camera;
 
@@ -57,10 +52,6 @@ Scene.prototype.update = function(gl, keysPressed) {
   gl.clearColor(164/255, 66/255, 220/255, 1.0);
   gl.clearDepth(1.0);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-  this.accdt += dt;
-  this.materials[0].lightPos.set(new Vec3(Math.sin(this.accdt*this.speed)*this.r,0.0,Math.cos(this.accdt*this.speed)*this.r));
-  this.materials[1].lightPos.set(new Vec3(Math.sin(this.accdt*this.speed)*this.r,0.0,Math.cos(this.accdt*this.speed)*this.r));
 
   camera.move(dt, keysPressed);
 
@@ -74,12 +65,10 @@ Scene.prototype.update = function(gl, keysPressed) {
     camera.mouseUp();
   };
 
-  for(var i = 0; i < this.mesh.meshes.length; i++){
-    this.mesh.meshes[i].material.viewPos.set(camera.position);
-  }
-
   this.backgroundMaterial.eye.set(this.camera.position);
-
+  this.backgroundMaterial.ball1.set(new Vec3(0 + this.r * Math.cos(this.time), 2,                                10));
+  this.backgroundMaterial.ball2.set(new Vec3(0,                                2 + this.r * Math.sin(this.time), 10));
+  this.backgroundMaterial.ball3.set(new Vec3(0 + this.r * Math.sin(this.time), 2 + this.r * Math.cos(this.time), 10));
+  this.backgroundMaterial.ball4.set(new Vec3(0 + this.r * Math.cos(this.time), 2,                                10 + this.r * Math.sin(this.time)));
   this.background.draw(this.camera);
-  //this.slowpoke.draw(this.camera);
 };

@@ -1,11 +1,11 @@
 var PerspectiveCamera = function()
 {
-  this.position = new Vec3(0.0, 2.0, 20.0);
+  this.position = new Vec3(-7.0, 2.0, 25.0);
   this.ahead = new Vec3(0.0, 0.0, -1.0);
   this.right = new Vec3(1.0, 0.0, 0.0);
   this.up = new Vec3(0.0, 1.0, 0.0);
 
-  this.yaw = 0.0;
+  this.yaw = -0.45;
   this.pitch = 0.0;
   this.fov = 1.0;
   this.aspect = 1.0;
@@ -18,9 +18,19 @@ var PerspectiveCamera = function()
   this.isDragging = false;
   this.mouseDelta = new Vec2(0.0, 0.0);
 
-
-
   PerspectiveCamera.worldUp = new Vec3(0, 1, 0);
+
+  this.ahead = new Vec3(
+     -Math.sin(this.yaw)*Math.cos(this.pitch),
+      Math.sin(this.pitch),
+     -Math.cos(this.yaw)*Math.cos(this.pitch) );
+    this.right.setVectorProduct(
+      this.ahead,
+      PerspectiveCamera.worldUp );
+    this.right.normalize();
+    this.up.setVectorProduct(this.right, this.ahead);
+
+
   this.viewMatrix = new Mat4();
   this.projMatrix = new Mat4();
   this.rayDirMatrix = new Mat4();
